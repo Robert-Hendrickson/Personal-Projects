@@ -1,0 +1,14 @@
+GIT CHEATSHEET
+# Common Things
+`git fetch; git pull --rebase origin master;`
+`git checkout [branch]` *switch to new branch*
+`git checkout -b [new branch name]` *create new branch*
+`git push origin [branch]` *push to remote from [branch].  Creates branch on origin.*
+`git merge master` *use this on a non-master local branch to bring it up to date with your local master*
+`git add --all` *Add all files to staging.  Targets tracked and untracked.*
+`git commit -m "[Commit Message]"` *Commit with a custom message*
+#Helpful Things
+`git stash` *stash all changes on your current branch*
+`git stash pop` *apply changes from stash and remove the stashed instance*
+`git log` *see git history.  exit with 'q'*
+`git reflog` *see git history by reference id.*
