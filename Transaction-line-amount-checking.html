@@ -2,40 +2,78 @@
 <html>
     <head>
         <style>
-            table td {
+            #inputTable td {
                 border-top: #000 solid 2px;
                 border-bottom: #000 solid 2px;
                 border-right: #000 solid 2px;
             }
-            table td:first-child {
+            #inputTable td:first-child {
                 border-left: #000 solid 2px;
             }
             td {
-                width: 60px;
+                width: 70px;
+                height: 21px;
                 float: left;
             }
-            table > tbody td {
-                text-align: right;
+            input {
+                width: 63px;
+            }
+            input[disabled] {
+                border: none !important;
+            }
+            #inputTable {
+                width:450px;
+                float: left;
+            }
+            #btn-totals {
+                width: 100px;
+                float: left;
+                margin-top: 40px;
+                margin-left: 40px;
+            }
+            div.totals {
+                width: 440px;
+                float: left;
+            }
+            div.totals div {
+                float: left;
+                width: 50%;
             }
         </style>
-        <script src="https://ajax.googleapis.com/ajax/libs/cesiumjs/1.78/Build/Cesium/Cesium.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
         <script>
-            var newLine = `
-                <tr>
-                    <td>Qty</td>
-                    <td>Price</td>
-                    <td>EXT</td>
-                    <td>Discount</td>
-                    <td>Tax</td>
-                    <td>Total</td>
+            var newLine = `<tr>
+                    <td><input type="number" /></td>
+                    <td><input type="number" /></td>
+                    <td><input type="number" value="0" disabled /></td>
+                    <td><input type="number"/></td>
+                    <td><input type="number" value="0" disabled /></td>
+                    <td><input type="number" value="0" disabled/></td>
                 </tr>`;
+
             function addLine(){
-                $('table > tbody').innerHTML = $('table > tbody').innerHTML + newLine;
+                let current = $('#table-lines')[0].innerHTML;
+                current = current + newLine;
+                $('#table-lines')[0].innerHTML = current;
             }
+            //test function for making more than one line at a time
+            function multiLineAdd() {
+                let x = $('#lines-to-add')[0].value;
+                console.log(x);
+                if (x == ''){
+                    addLine();
+                }else if($('#lines-to-add')[0].value != '') {
+                    let y = parseInt($('#lines-to-add')[0].value);
+                    for (i = 0; i < y; i++){
+                        addLine();
+                    };
+                    console.log(`Added ${y} Lines`);
+                };
+            };
         </script>
     </head>
     <body>
-        <table>
+        <table id="inputTable">
             <thead>
                 <tr>
                     <td>Qty</td>
@@ -46,16 +84,42 @@
                     <td>Total</td>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="table-lines">
                 <tr>
-                    <td>Qty</td>
-                    <td>Price</td>
-                    <td>EXT</td>
-                    <td>Discount</td>
-                    <td>Tax</td>
-                    <td>Total</td>
+                    <td><input type="number" /></td>
+                    <td><input type="number" /></td>
+                    <td><input type="number" value="0" disabled /></td>
+                    <td><input type="number"/></td>
+                    <td><input type="number" value="0" disabled /></td>
+                    <td><input type="number" value="0" disabled/></td>
                 </tr>
             </tbody>
         </table>
+        <div class="totals">
+            <div>
+                New Lines <input id="lines-to-add" type="number" /><input type="submit" value="Add" onclick="multiLineAdd()" />
+            </div>
+            <div>
+                Tax Rate <input id="tax-rate" type="number" />
+            </div>
+            <table id="btn-totals">
+                <tbody>
+                    <tr>
+                        <td>
+                            Sub Total
+                        </td>
+                        <td>
+                            Discount
+                        </td>
+                        <td>
+                            Tax
+                        </td>
+                        <td>
+                            Total
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </body>
 </html>
