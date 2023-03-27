@@ -1,9 +1,61 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <style>
+            table td {
+                border-top: #000 solid 2px;
+                border-bottom: #000 solid 2px;
+                border-right: #000 solid 2px;
+            }
+            table td:first-child {
+                border-left: #000 solid 2px;
+            }
+            td {
+                width: 60px;
+                float: left;
+            }
+            table > tbody td {
+                text-align: right;
+            }
+        </style>
         <script src="https://ajax.googleapis.com/ajax/libs/cesiumjs/1.78/Build/Cesium/Cesium.js"></script>
+        <script>
+            var newLine = `
+                <tr>
+                    <td>Qty</td>
+                    <td>Price</td>
+                    <td>EXT</td>
+                    <td>Discount</td>
+                    <td>Tax</td>
+                    <td>Total</td>
+                </tr>`;
+            function addLine(){
+                $('table > tbody').innerHTML = $('table > tbody').innerHTML + newLine;
+            }
+        </script>
     </head>
     <body>
-        
+        <table>
+            <thead>
+                <tr>
+                    <td>Qty</td>
+                    <td>Price</td>
+                    <td>EXT</td>
+                    <td>Discount</td>
+                    <td>Tax</td>
+                    <td>Total</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Qty</td>
+                    <td>Price</td>
+                    <td>EXT</td>
+                    <td>Discount</td>
+                    <td>Tax</td>
+                    <td>Total</td>
+                </tr>
+            </tbody>
+        </table>
     </body>
 </html>
