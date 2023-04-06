@@ -2,6 +2,13 @@
 <html>
     <head>
         <style>
+            input[type="checkbox"]{
+                width: 13px;
+                float: left;
+            }
+            thead td {
+                height: 35px !important;
+            }
             #inputTable td {
                 border-top: #000 solid 2px;
                 border-bottom: #000 solid 2px;
@@ -66,7 +73,12 @@
             var totals = {
                 'sub_total': 0,
                 'disc': 0,
-                'tax': 0,
+                'tax': {
+                    'material':0,
+                    'service':0,
+                    'class':0,
+                    'total':0
+                },
                 'total': 0
             }
             //Add new lines without removing data.
@@ -134,21 +146,21 @@
                 trow.appendChild(td_total);
                 //create row cell for taxable choice, add attributes, and add to the row element
                 const td_taxable = $(document)[0].createElement("td");
-                const sel_taxable = $(document)[0].createElement("select");
-                sel_taxable.setAttribute('id', 'taxable');
-                sel_taxable.setAttribute('value', 'yes');
-                sel_taxable.setAttribute('onchange', `lineUpdate(${line})`);
-                const opt_y = $(document)[0].createElement("option");
-                opt_y.setAttribute('value', 'yes');
-                const opt_y_text = $(document)[0].createTextNode('Yes');
-                opt_y.appendChild(opt_y_text);
-                const opt_n = $(document)[0].createElement("option");
-                opt_n.setAttribute('value', 'no');
-                const opt_n_text = $(document)[0].createTextNode('No');
-                opt_n.appendChild(opt_n_text);
-                sel_taxable.appendChild(opt_y);
-                sel_taxable.appendChild(opt_n);
-                td_taxable.appendChild(sel_taxable);
+                const mat_taxable = $(document)[0].createElement("input");
+                mat_taxable.setAttribute('type','checkbox');
+                mat_taxable.setAttribute('id',`row_${number_of_lines}_mat`);
+                mat_taxable.setAttribute('onchange', `booleanUpdate(${line},'mat')`);
+                td_taxable.appendChild(mat_taxable);
+                const serv_taxable = $(document)[0].createElement("input");
+                serv_taxable.setAttribute('type','checkbox');
+                serv_taxable.setAttribute('id',`row_${number_of_lines}_serv`);
+                serv_taxable.setAttribute('onchange', `booleanUpdate(${line},'serv')`);
+                td_taxable.appendChild(serv_taxable);
+                const class_taxable = $(document)[0].createElement("input");
+                class_taxable.setAttribute('type','checkbox');
+                class_taxable.setAttribute('id',`row_${number_of_lines}_class`);
+                class_taxable.setAttribute('onchange', `booleanUpdate(${line},'class')`);
+                td_taxable.appendChild(class_taxable);
                 trow.appendChild(td_taxable);
                 // add row element to the existing table
                 $('#table-lines')[0].appendChild(trow);
@@ -157,32 +169,32 @@
                     "price": 0,
                     "ext": 0,
                     "disc": 0,
-                    "tax": 0,
+                    "tax": {
+                        'mat': 0,
+                        'serv': 0,
+                        'class': 0,
+                        'total':0
+                    },
                     "taxable_amount": 0,
                     "total": 0,
-                    "taxable": "yes"
+                    "taxable":{
+                        'mat': false,
+                        'serv': false,
+                        'class': false
+                    }
                 };
+                $(`#row_${number_of_lines}_mat`)[0].checked = true;
+                line_entries[`row_${number_of_lines}`].taxable.mat = true;
             }
-            function addLine(){
-                number_of_lines++;
-                let current = $('#table-lines')[0].innerHTML;
-                let newLine = `<tr id="row_${number_of_lines}">
-                        <td><input id="qty" type="number" value="0" onchange="lineUpdate(${number_of_lines})" /></td>
-                        <td><input id="price" type="number" value="0" onchange="lineUpdate(${number_of_lines})" /></td>
-                        <td><input id="ext" type="number" value="0" disabled /></td>
-                        <td><input id="discount" type="number" value="0" onchange="lineUpdate(${number_of_lines})" /></td>
-                        <td><input id="tax" type="number" value="0" disabled /></td>
-                        <td><input id="total" type="number" value="0" disabled/></td>
-                        <td><select id="taxable" value="yes" onchange="lineUpdate(${number_of_lines})">
-                            <option value="yes">Yes</option>
-                            <option value="no">No</option>
-                            </select>
-                        </td>
-                    </tr>`;
-                current = current + newLine;
-                $('#table-lines')[0].innerHTML = current;
-                    line_entries[`row_${number_of_lines}`] = template;
-            };
+            function booleanUpdate(x,y) {
+                let row = line_entries[`row_${x}`];
+                if($(`#row_${x}_${y}`)[0].checked){
+                    row.taxable[`${y}`] = true;
+                } else {
+                    row.taxable[`${y}`] = false;
+                }
+                lineUpdate(x);
+            }
             //sets a default first line
             $(document).ready(function(){addRowElement();});
             function taxableLine(){
@@ -221,49 +233,77 @@
                 }
             }
             function updateTax(){
-                x = parseFloat($('#tax-rate')[0].value);
-                x = x/100;
+                tm = parseFloat($('#material-rate')[0].value);
+                tm = tm/100;
+                ts = parseFloat($('#service-rate')[0].value);
+                ts = ts/100;
+                tc = parseFloat($('#class-rate')[0].value);
+                tc = tc/100;
                 let lines = number_of_lines;
-                console.log('tax rate is' + x);
+                console.log('Material rate is ' + tm);
+                console.log('Service rate is ' + ts);
+                console.log('Class rate is ' + tc);
                 for(let i = 1; i < (lines + 1); i++){
-                    console.log('updating taxable lines');
+                    console.log('updating lines');
                     let z = line_entries[`row_${i}`];
-                    if ($(`#row_${i} #taxable`)[0].value == 'yes'){
-                        z.tax = x * z.ext;
-                        $(`#row_${i} #tax`)[0].value = z.tax;
-                        z.total = z.ext - z.disc + parseFloat(z.tax.toFixed(2));
-                        $(`#row_${i} #total`)[0].value = z.total;
-                    }else if($(`#row_${i} #taxable`)[0].value == 'no'){
-                        console.log('updating non-taxable lines');
-                        z.tax = 0;
-                        $(`#row_${i} #tax`)[0].value = z.tax;
-                    };
+                    if (z.taxable.mat){
+                        z.tax.mat = tm * z.taxable_amount;
+                    } else if(!z.taxable.mat){
+                        z.tax.mat - 0 * z.taxable_amount;
+                    }
+                    if (z.taxable.serv){
+                        z.tax.serv = ts * z.taxable_amount;
+                    } else if(!z.taxable.serv){
+                        z.tax.serv - 0 * z.taxable_amount;
+                    }
+                    if (z.taxable.class){
+                        z.tax.class = tc * z.taxable_amount;
+                    } else if(!z.taxable.class){
+                        z.tax.class - 0 * z.taxable_amount;
+                    }
+                    z.tax.total = z.tax.mat + z.tax.serv + z.tax.class;
+                    z.total = z.taxable_amount + parseFloat(z.tax.total.toFixed(2));
+                    $(`#row_${i} #tax`)[0].value = z.tax.total;
+                    $(`#row_${i} #total`)[0].value = z.total;
                 };
                 calcTotals();
             };
             function calcTotals() {
                 totals = {
-                'sub_total': 0,
-                'disc': 0,
-                'tax': 0,
-                'total': 0
+                    'sub_total': 0,
+                    'disc': 0,
+                    'tax': {
+                        'material':0,
+                        'service':0,
+                        'class':0,
+                        'total':0
+                    },
+                    'total': 0
                 };
                 for (let line in line_entries) {
-                    totals.sub_total = totals.sub_total + line_entries[`${line}`].ext;
+                    totals.sub_total = totals.sub_total + parseFloat(line_entries[`${line}`].ext.toFixed(2));
                     totals.disc = totals.disc + line_entries[`${line}`].disc;
-                    totals.tax = totals.tax + line_entries[`${line}`].tax;
+                    totals.tax.material = totals.tax.material + line_entries[`${line}`].tax.mat;
+                    totals.tax.service = totals.tax.service + line_entries[`${line}`].tax.serv;
+                    totals.tax.class = totals.tax.class + line_entries[`${line}`].tax.class;
                 }
-                totals.tax = parseFloat(totals.tax.toFixed(2));
-                totals.total = totals.sub_total - totals.disc + totals.tax;
+                totals.sub_total = parseFloat(totals.sub_total.toFixed(2));
+                totals.tax.material = parseFloat(totals.tax.material.toFixed(2));
+                totals.tax.service = parseFloat(totals.tax.service.toFixed(2));
+                totals.tax.class = parseFloat(totals.tax.class.toFixed(2));
+                totals.tax.total = totals.tax.material + totals.tax.service + totals.tax.class;
+                totals.tax.total = parseFloat(totals.tax.total.toFixed(2));
+                totals.tax.total = parseFloat(totals.tax.total.toFixed(2));
+                totals.total = totals.sub_total - totals.disc + totals.tax.total;
+                totals.total = parseFloat(totals.total.toFixed(2));
                 $('#total-sub')[0].value = totals.sub_total;
                 $('#total-disc')[0].value = totals.disc;
-                $('#total-tax')[0].value = totals.tax;
+                $('#total-tax')[0].value = totals.tax.total;
                 $('#total-total')[0].value = totals.total;
             }
-            //needs to have variables grab values to update object instead of updating object directly from the row data in the table
             function lineUpdate(x){
+                let row = line_entries[`row_${x}`];
                 console.log('Begin line update');
-                console.log(x);
                 //get qty value
                 let qty_input = parseFloat($(`#row_${x} #qty`)[0].value);
                 line_entries[`row_${x}`].qty = qty_input;
@@ -281,17 +321,34 @@
                 //calculate taxable amount
                 let taxable = ext_input - disc_input;
                 line_entries[`row_${x}`].taxable_amount = taxable;
-                //check line is taxable, if it is set row tax rate
-                if ($(`#row_${x} #taxable`)[0].value == 'yes'){
-                    let t = parseFloat($('#tax-rate')[0].value);
-                    t = t/100;
-                    line_entries[`row_${x}`].tax = t * ext_input;
-                    $(`#row_${x} #tax`)[0].value = line_entries[`row_${x}`].tax;
-                }else if($(`#row_${x} #taxable`)[0].value == 'no'){
-                    line_entries[`row_${x}`].tax = 0;
-                    $(`#row_${x} #tax`)[0].value = line_entries[`row_${x}`].tax;
-                };
-                line_entries[`row_${x}`].total = line_entries[`row_${x}`].ext - line_entries[`row_${x}`].disc + parseFloat(line_entries[`row_${x}`].tax.toFixed(2));
+                //check jurisdictions, update tax amount
+                if(row.taxable.mat){
+                    let tm = parseFloat($(`#material-rate`)[0].value);
+                    tm = tm/100;
+                    row.tax.mat = row.taxable_amount * tm;
+                } else{
+                    let t = 0;
+                    row.tax.mat = row.taxable_amount * t;
+                }
+                if(row.taxable.serv){
+                    let ts = parseFloat($(`#service-rate`)[0].value);
+                    ts = ts/100;
+                    row.tax.serv = row.taxable_amount * ts;
+                } else{
+                    let t = 0;
+                    row.tax.serv = row.taxable_amount * t;
+                }
+                if(row.taxable.class){
+                    let tc = parseFloat($(`#class-rate`)[0].value);
+                    tc = tc/100;
+                    row.tax.class = row.taxable_amount * tc;
+                } else{
+                    let t = 0;
+                    row.tax.class = row.taxable_amount * t;
+                }
+                row.tax.total = row.tax.mat + row.tax.serv + row.tax.class;
+                $(`#row_${x} #tax`)[0].value = row.tax.total;
+                line_entries[`row_${x}`].total = line_entries[`row_${x}`].ext - line_entries[`row_${x}`].disc + parseFloat(line_entries[`row_${x}`].tax.total.toFixed(2));
                 $(`#row_${x} #total`)[0].value = line_entries[`row_${x}`].total;
                 calcTotals();
                 
@@ -300,17 +357,27 @@
                 line_entries = {};
                 number_of_lines = 0;
                 totals = {
-                'sub_total': 0,
-                'disc': 0,
-                'tax': 0,
-                'total': 0
-                };
+                    'sub_total': 0,
+                    'disc': 0,
+                    'tax': {
+                        'material':0,
+                        'service':0,
+                        'class':0,
+                        'total':0
+                    },
+                    'total': 0
+                }
                 $('#table-lines')[0].innerHTML = '';
                 $('#total-sub')[0].value = 0;
                 $('#total-disc')[0].value = 0;
                 $('#total-tax')[0].value = 0;
                 $('#total-total')[0].value = 0;
                 addRowElement();
+                $('#material-rate')[0].value = 0;
+                $('#service-rate')[0].value = 0;
+                $('#class-rate')[0].value = 0;
+                console.clear();
+                console.log('Values have been reset');
             };
         </script>
     </head>
@@ -324,7 +391,10 @@
                     <td>Discount</td>
                     <td>Tax</td>
                     <td>Total</td>
-                    <td>Taxable?</td>
+                    <td>
+                        Taxable?<br />
+                        M | S | C
+                    </td>
                 </tr>
             </thead>
             <tbody id="table-lines">
@@ -336,8 +406,35 @@
                 <br />
             </div>
             <div>
-                Tax Rate <input id="tax-rate" type="number" onchange="updateTax()" value="0" />
-                <input id="reset-btn" type="button" onclick="reset()" value="Reset" />
+                <table id="tax-rates">
+                    <thead>
+                        <td colspan="3" Style="text-align: center; width: 100%;">Tax Rates</td>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                Materials
+                            </td>
+                            <td>
+                                Services
+                            </td>
+                            <td>
+                                Classes
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input id="material-rate" type="number" onchange="updateTax()" value="0" />
+                            </td>
+                            <td>
+                                <input id="service-rate" type="number" onchange="updateTax()" value="0" />
+                            </td>
+                            <td>
+                                <input id="class-rate" type="number" onchange="updateTax()" value="0" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
             <div id="addline-error" style="display: none; width: 100%; color: red;">
                 Enter a number between 1 and 20
@@ -379,5 +476,6 @@
                 </tbody>
             </table>
         </div>
+        <input id="reset-btn" type="button" onclick="reset()" value="Reset" />
     </body>
 </html>
