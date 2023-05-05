@@ -47,12 +47,23 @@
                 border-left:#000 solid 2px;
             }
             div.totals {
-                width: 440px;
+                width: 460px;
+                float: left;
+            }
+            div.totals-container {
                 float: left;
             }
             div.totals div {
                 float: left;
                 width: 50%;
+            }
+            div.breakdown-view, div.breakdown-view textarea {
+                width: 700px;
+                float: left;
+            }
+            div.breakdown-view textarea {
+                width: 180px;
+                height: 500px;
             }
         </style>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
@@ -73,6 +84,7 @@
             var totals = {
                 'sub_total': 0,
                 'disc': 0,
+                'shipping': 0,
                 'tax': {
                     'material':0,
                     'service':0,
@@ -296,6 +308,8 @@
                 totals.tax.total = parseFloat(totals.tax.total.toFixed(2));
                 totals.total = totals.sub_total - totals.disc + totals.tax.total;
                 totals.total = parseFloat(totals.total.toFixed(2));
+                totals.shipping = parseFloat($('#shipping')[0].value);
+                totals.total = totals.total + totals.shipping;
                 $('#total-sub')[0].value = totals.sub_total;
                 $('#total-disc')[0].value = totals.disc;
                 $('#total-tax')[0].value = totals.tax.total;
@@ -379,6 +393,48 @@
                 console.clear();
                 console.log('Values have been reset');
             };
+            function displayBreakdown() {
+                let btotals = `Totals {
+                    SubTotal: ${totals.sub_total}
+                    Discount: ${totals.disc}
+                    Shipping: ${totals.shipping}
+                    Tax: {
+                        Material: ${totals.tax.material}
+                        Service: ${totals.tax.service}
+                        Class: ${totals.tax.class}
+                        Total: ${totals.tax.total}
+                    }
+                    Total: ${totals.total}
+                }`;
+                let blines = '';
+                let test = [1,2,3,4];
+                for(let line in line_entries){
+                    blines = blines + `
+                    ${line} {
+                        Discount: ${line_entries[line].disc}
+                        Ext Price: ${line_entries[line].ext}
+                        Price: ${line_entries[line].price}
+                        Quantity: ${line_entries[line].qty}
+                        tax: {
+                            Mat: ${line_entries[line].tax.mat}
+                            Serv: ${line_entries[line].tax.serv}
+                            Class: ${line_entries[line].tax.class}
+                            Total: ${line_entries[line].tax.total}
+                        }
+                        taxable: {
+                            Mat: ${line_entries[line].taxable.mat}
+                            Serv: ${line_entries[line].taxable.serv}
+                            Class: ${line_entries[line].taxable.class}
+                        }
+                        taxable_amount: ${line_entries[line].taxable_amount}
+                        total: ${line_entries[line].total}
+                    }`;
+                }
+                $('textarea')[0].innerText = `${btotals}
+
+                ${blines}`;
+                
+            }
         </script>
     </head>
     <body>
@@ -400,82 +456,96 @@
             <tbody id="table-lines">
             </tbody>
         </table>
-        <div class="totals">
-            <div>
-                New Lines <input id="lines-to-add" onchange="lineAddCheck()" type="number" /><input type="submit" value="Add" onclick="multiLineAdd()" />
-                <br />
-            </div>
-            <div>
-                <table id="tax-rates">
-                    <thead>
-                        <td colspan="3" Style="text-align: center; width: 100%;">Tax Rates</td>
-                    </thead>
+        <div class="totals-container">
+            <div class="totals">
+                <div>
+                    New Lines <input id="lines-to-add" onchange="lineAddCheck()" type="number" /><input type="submit" value="Add" onclick="multiLineAdd()" />
+                    <br />
+                </div>
+                <div>
+                    <table id="tax-rates">
+                        <thead>
+                            <td colspan="3" Style="text-align: center; width: 100%;">Tax Rates</td>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    Materials
+                                </td>
+                                <td>
+                                    Services
+                                </td>
+                                <td>
+                                    Classes
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input id="material-rate" type="number" onchange="updateTax()" value="0" />
+                                </td>
+                                <td>
+                                    <input id="service-rate" type="number" onchange="updateTax()" value="0" />
+                                </td>
+                                <td>
+                                    <input id="class-rate" type="number" onchange="updateTax()" value="0" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="addline-error" style="display: none; width: 100%; color: red;">
+                    Enter a number between 1 and 20
+                </div>
+                <table id="btn-totals">
                     <tbody>
                         <tr>
                             <td>
-                                Materials
+                                Sub Total
                             </td>
                             <td>
-                                Services
-                            </td>
-                            <td>
-                                Classes
+                                <input id="total-sub" type="number" disabled="disabled" value="0" />
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <input id="material-rate" type="number" onchange="updateTax()" value="0" />
+                                Discount
                             </td>
                             <td>
-                                <input id="service-rate" type="number" onchange="updateTax()" value="0" />
+                                <input id="total-disc" type="number" disabled="disabled" value="0" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Shipping
                             </td>
                             <td>
-                                <input id="class-rate" type="number" onchange="updateTax()" value="0" />
+                                <input id="shipping" type="number" value="0" onchange="calcTotals()" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Tax
+                            </td>
+                            <td>
+                                <input id="total-tax" type="number" disabled="disabled" value="0" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Total
+                            </td>
+                            <td>
+                                <input id="total-total" type="number" disabled="disabled" value="0" />
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <div id="addline-error" style="display: none; width: 100%; color: red;">
-                Enter a number between 1 and 20
-            </div>
-            <table id="btn-totals">
-                <tbody>
-                    <tr>
-                        <td>
-                            Sub Total
-                        </td>
-                        <td>
-                            <input id="total-sub" type="number" disabled="disabled" value="0" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Discount
-                        </td>
-                        <td>
-                            <input id="total-disc" type="number" disabled="disabled" value="0" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Tax
-                        </td>
-                        <td>
-                            <input id="total-tax" type="number" disabled="disabled" value="0" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Total
-                        </td>
-                        <td>
-                            <input id="total-total" type="number" disabled="disabled" value="0" />
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <input id="reset-btn" type="button" onclick="reset()" value="Reset" />
         </div>
-        <input id="reset-btn" type="button" onclick="reset()" value="Reset" />
+        <div class="breakdown-view">
+            <textarea id="breakdown"></textarea>
+            <input style="width: 110px;" type="button" value="See Breakdown" onclick="displayBreakdown()" />
+        </div>
     </body>
 </html>
