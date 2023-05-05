@@ -47,7 +47,7 @@
                 border-left:#000 solid 2px;
             }
             div.totals {
-                width: 460px;
+                width: 290px;
                 float: left;
             }
             div.totals-container {
@@ -55,10 +55,10 @@
             }
             div.totals div {
                 float: left;
-                width: 50%;
+                width: 100%;
             }
             div.breakdown-view, div.breakdown-view textarea {
-                width: 700px;
+                width: 290px;
                 float: left;
             }
             div.breakdown-view textarea {
@@ -460,7 +460,11 @@
             <div class="totals">
                 <div>
                     New Lines <input id="lines-to-add" onchange="lineAddCheck()" type="number" /><input type="submit" value="Add" onclick="multiLineAdd()" />
+                    <input id="reset-btn" type="button" onclick="reset()" value="Reset" />
                     <br />
+                </div>
+                <div id="addline-error" style="display: none; width: 100%; color: red;">
+                    Enter a number between 1 and 20
                 </div>
                 <div>
                     <table id="tax-rates">
@@ -492,9 +496,6 @@
                             </tr>
                         </tbody>
                     </table>
-                </div>
-                <div id="addline-error" style="display: none; width: 100%; color: red;">
-                    Enter a number between 1 and 20
                 </div>
                 <table id="btn-totals">
                     <tbody>
@@ -541,7 +542,6 @@
                     </tbody>
                 </table>
             </div>
-            <input id="reset-btn" type="button" onclick="reset()" value="Reset" />
         </div>
         <div class="breakdown-view">
             <textarea id="breakdown"></textarea>
