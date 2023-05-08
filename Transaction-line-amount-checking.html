@@ -62,7 +62,8 @@
                 float: left;
             }
             div.breakdown-view textarea {
-                width: 180px;
+                max-width: 180px;
+                min-width: 180px;
                 height: 500px;
             }
         </style>
@@ -411,22 +412,17 @@
                 for(let line in line_entries){
                     blines = blines + `
                     ${line} {
-                        Discount: ${line_entries[line].disc}
-                        Ext Price: ${line_entries[line].ext}
                         Price: ${line_entries[line].price}
                         Quantity: ${line_entries[line].qty}
+                        Ext Price: ${line_entries[line].ext}
+                        Discount: ${line_entries[line].disc}
+                        taxable_amount: ${line_entries[line].taxable_amount}
                         tax: {
                             Mat: ${line_entries[line].tax.mat}
                             Serv: ${line_entries[line].tax.serv}
                             Class: ${line_entries[line].tax.class}
                             Total: ${line_entries[line].tax.total}
                         }
-                        taxable: {
-                            Mat: ${line_entries[line].taxable.mat}
-                            Serv: ${line_entries[line].taxable.serv}
-                            Class: ${line_entries[line].taxable.class}
-                        }
-                        taxable_amount: ${line_entries[line].taxable_amount}
                         total: ${line_entries[line].total}
                     }`;
                 }
