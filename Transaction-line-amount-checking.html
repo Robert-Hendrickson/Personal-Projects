@@ -57,7 +57,7 @@
                 float: left;
                 width: 100%;
             }
-            div.breakdown-view, div.breakdown-view textarea {
+            div.breakdown-area {
                 width: 290px;
                 float: left;
             }
@@ -65,6 +65,26 @@
                 max-width: 180px;
                 min-width: 180px;
                 height: 500px;
+            }
+            ul#breakdowns li{
+                list-style: none;
+                width: 40px;
+                float: left;
+                border:#000 solid 2px;
+                border-bottom-width: 0px;
+            }
+            div.breakdown-nav{
+                width: 100%;
+            }
+            div.breakdown-view {
+                width: 100%;
+                float: left;
+            }
+            div.breakdown-hide{
+                display: none;
+            }
+            div.breakdown-hide.active{
+                display: block !important;
             }
         </style>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
@@ -394,42 +414,60 @@
                 console.clear();
                 console.log('Values have been reset');
             };
-            function displayBreakdown() {
-                let btotals = `Totals {
-                    SubTotal: ${totals.sub_total}
-                    Discount: ${totals.disc}
-                    Shipping: ${totals.shipping}
-                    Tax: {
-                        Material: ${totals.tax.material}
-                        Service: ${totals.tax.service}
-                        Class: ${totals.tax.class}
-                        Total: ${totals.tax.total}
-                    }
-                    Total: ${totals.total}
-                }`;
-                let blines = '';
-                let test = [1,2,3,4];
-                for(let line in line_entries){
-                    blines = blines + `
-                    ${line} {
-                        Price: ${line_entries[line].price}
-                        Quantity: ${line_entries[line].qty}
-                        Ext Price: ${line_entries[line].ext}
-                        Discount: ${line_entries[line].disc}
-                        taxable_amount: ${line_entries[line].taxable_amount}
-                        tax: {
-                            Mat: ${line_entries[line].tax.mat}
-                            Serv: ${line_entries[line].tax.serv}
-                            Class: ${line_entries[line].tax.class}
-                            Total: ${line_entries[line].tax.total}
+            function displayBreakdown(x) {
+                //for totals
+                console.log(x);
+                if(x=='totals'){
+                    let btotals = `Totals {
+                        SubTotal: ${totals.sub_total}
+                        Discount: ${totals.disc}
+                        Shipping: ${totals.shipping}
+                        Tax: {
+                            Material: ${totals.tax.material}
+                            Service: ${totals.tax.service}
+                            Class: ${totals.tax.class}
+                            Total: ${totals.tax.total}
                         }
-                        total: ${line_entries[line].total}
+                        Total: ${totals.total}
                     }`;
+                    $('#break-totals textarea')[0].innerText = `${btotals}`;
+               }  
+                //for taxes
+                if(x=='lines'){
+                    let blines = '';
+                    let test = [1,2,3,4];
+                    for(let line in line_entries){
+                        blines = blines + `
+                        ${line} {
+                            Price: ${line_entries[line].price}
+                            Quantity: ${line_entries[line].qty}
+                            Ext Price: ${line_entries[line].ext}
+                            Discount: ${line_entries[line].disc}
+                            taxable_amount: ${line_entries[line].taxable_amount}
+                            tax: {
+                                Mat: ${line_entries[line].tax.mat}
+                                Serv: ${line_entries[line].tax.serv}
+                                Class: ${line_entries[line].tax.class}
+                                Total: ${line_entries[line].tax.total}
+                            }
+                            total: ${line_entries[line].total}
+                        }`;
+                    }
+                    console.log(blines);
+                    $('#break-lines textarea')[0].innerText = `${blines}`;
                 }
-                $('textarea')[0].innerText = `${btotals}
-
-                ${blines}`;
-                
+            }
+            function breakdown_display(x) {
+                if(x=="totals"){
+                    $('div#break-lines')[0].classList = 'breakdown-hide';
+                    $('div#break-totals')[0].classList = 'breakdown-hide active';
+                    console.log('switched to totals');
+                }
+                if(x=="lines"){
+                    $('div#break-totals')[0].classList = 'breakdown-hide';
+                    $('div#break-lines')[0].classList = 'breakdown-hide active';
+                    console.log('switched to taxes');
+                }
             }
         </script>
     </head>
@@ -539,9 +577,31 @@
                 </table>
             </div>
         </div>
-        <div class="breakdown-view">
+        <div class="breakdown-area">
+            <div class="breakdown-nav">
+                <ul id="breakdowns">
+                    <li id="breakdown-totals" onclick="breakdown_display('totals')">Totals</li>
+                    <li id="breakdown-lines" onclick="breakdown_display('lines')">Lines</li>
+                </ul>
+            </div>
+            <div class="breakdown-view">
+                <div class="breakdown-hide active" id="break-totals">
+                    <textarea>
+                        
+                    </textarea><br />
+                    <button onclick="displayBreakdown('totals')">Totals</button>
+                </div>
+                <div class="breakdown-hide" id="break-lines">
+                    <textarea>
+                        
+                    </textarea><br />
+                    <button onclick="displayBreakdown('lines')">Lines</button>
+                </div>
+            </div>
+            <!--hold for later use
             <textarea id="breakdown"></textarea>
             <input style="width: 110px;" type="button" value="See Breakdown" onclick="displayBreakdown()" />
+                -->
         </div>
     </body>
 </html>
