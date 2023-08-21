@@ -5,12 +5,27 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
         <script src="/Personal-Projects/DND-text/dnd-text.js"></script>
         <link rel="stylesheet" href="/Personal-Projects/DND-text/dnd-text.css">
+        <link rel="stylesheet" href="/Personal-Projects/DND-text/fonts.css">
     </head>
     <body>
         <div class="title">
             <H2>
                 Text Translator
             </H2>
+        </div>
+        <div class="font-selector">
+            <select>
+                <option value="basic">Basic Text</option>
+            </select>
+            <span>Example Text</span>
+            <br />
+            <div style="border: 2px solid grey; text-align: center;">
+                <span>I am a set of text.</span>
+            </div>
+        </div>
+        <div class="textbox-labels">
+            <div>Type your text here</div>
+            <div>Translated text appears here</div>
         </div>
         <div class="content">
             <textarea id="entered-text" oninput="textUpdate()"></textarea>
