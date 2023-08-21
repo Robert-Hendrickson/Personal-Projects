@@ -1,3 +1,7 @@
+@font-face {
+    font-family: Runic;
+    src: url('/Personal-Projets/DND-Text/Fonts/NotoSansRunic/NotoSansRunic-Regular.ttf');
+}
 .title{
     width: 20%;
     margin: 0px auto;
