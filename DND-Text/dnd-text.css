@@ -1,0 +1,12 @@
+.title{
+    width: 20%;
+    margin: 0px auto;
+    text-align: center;
+}
+.content textarea{
+    width: 49%;
+    height: 220px;
+}
+.content{
+    width: 100%
+}
