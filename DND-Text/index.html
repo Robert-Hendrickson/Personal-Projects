@@ -14,13 +14,13 @@
             </H2>
         </div>
         <div class="font-selector">
-            <select>
-                <option value="basic">Basic Text</option>
+            <select onchange="fontSelect()">
+                <option value="none">None</option>
+                <option value="Runic">Runic</option>
             </select>
-            <span>Example Text</span>
             <br />
             <div style="border: 2px solid grey; text-align: center;">
-                <span>I am a set of text.</span>
+                <span id="example-text">I am a set of text.</span>
             </div>
         </div>
         <div class="textbox-labels">
@@ -29,7 +29,7 @@
         </div>
         <div class="content">
             <textarea id="entered-text" oninput="textUpdate()"></textarea>
-            <textarea style="font-family: Runic;" id="translated-text"></textarea>
+            <textarea id="translated-text"></textarea>
         </div>
     </body>
 </html>
