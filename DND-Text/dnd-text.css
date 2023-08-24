@@ -6,6 +6,7 @@
 .content textarea{
     width: 49%;
     height: 220px;
+    font-size: 32px;
 }
 .content{
     width: 100%

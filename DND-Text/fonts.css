@@ -1,8 +1,16 @@
 @font-face {
-    font-family: 'Runic';
-    src: url('/Personal-Projects/DND-Text/Fonts/NotoSansRunic/NotoSansRunic-Regular.ttf') format('truetype');
-}
-@font-face {
     font-family: 'lokharic';
     src: url('/Personal-Projects/DND-Text/Fonts/lokharic/Iokharic-dqvK.ttf')
+}
+@font-face {
+    font-family: 'lokharic-bold';
+    src: url('/Personal-Projects/DND-Text/Fonts/lokharic/IokharicBold-Plor.ttf')
+}
+@font-face {
+    font-family: 'lokharic-italic';
+    src: url('/Personal-Projects/DND-Text/Fonts/lokharic/IokharicItalic-XMdd.ttf')
+}
+@font-face {
+    font-family: 'lokharic-bolditalic';
+    src: url('/Personal-Projects/DND-Text/Fonts/lokharic/IokharicBoldItalic-LGmZ.ttf')
 }
