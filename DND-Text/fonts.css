@@ -2,3 +2,7 @@
     font-family: 'Runic';
     src: url('/Personal-Projects/DND-Text/Fonts/NotoSansRunic/NotoSansRunic-Regular.ttf') format('truetype');
 }
+@font-face {
+    font-family: 'lokharic';
+    src: url('/Personal-Projects/DND-Text/Fonts/lokharic/Iokharic-dqvK.ttf')
+}
