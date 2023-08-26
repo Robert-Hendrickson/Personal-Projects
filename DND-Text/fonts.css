@@ -14,3 +14,11 @@
     font-family: 'lokharic-bolditalic';
     src: url('/Personal-Projects/DND-Text/Fonts/lokharic/IokharicBoldItalic-LGmZ.ttf')
 }
+@font-face {
+    font-family: 'Baybayin Doctrina';
+    src: url('/Personal-Projects/DND-Text/Fonts/baybain_doctrina/Baybayin Doctrina.otf')
+}
+@font-face {
+    font-family: 'Baybayin Doctrina Clear';
+    src: url('/Personal-Projects/DND-Text/Fonts/baybain_doctrina/BaybayinDoctrinaClear.ttf')
+}
