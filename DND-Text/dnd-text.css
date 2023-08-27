@@ -19,3 +19,9 @@
     width: 210px;
     margin: 0px auto;
 }
+select.style{
+    display: none;
+}
+select.style.active{
+    display: block !important;
+}

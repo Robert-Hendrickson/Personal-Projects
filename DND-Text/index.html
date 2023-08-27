@@ -17,13 +17,18 @@
             <select id="font-name" onchange="fontSelect()">
                 <option value="none">None</option>
                 <option value="lokharic">Lokharic</option>
-                <option value="lokharic-bold">Lokharic - Bold</option>
-                <option value="lokharic-italic">Lokharic - Italic</option>
-                <option value="lokharic-bolditalic">Lokharic - Bold/Italic</option>
-                <option value="Baybayin Doctrina">Baybayin Doctrina</option>
-                <option value="Baybayin Doctrina Clear">Baybayin Doctrina Clear</option>
+                <option value="Baybayin-Doctrina">Baybayin Doctrina</option>
             </select>
-            <br />
+            <select id="lokharic" class="style" onchange="styleSelect()">
+                <option value="default">Default</option>
+                <option value="lokharic-bold">Bold</option>
+                <option value="lokharic-italic">Italic</option>
+                <option value="lokharic-bolditalic">Bold/Italic</option>
+            </select>
+            <select id="Baybayin-Doctrina" class="style" onchange="styleSelect()">
+                <option value="default">Default</option>
+                <option value="Baybayin-Doctrina-Clear">Baybayin Doctrina Clear</option>
+            </select>
             <div style="border: 2px solid grey; text-align: center;">
                 <span id="example-text">I am a set of text.</span>
             </div>
