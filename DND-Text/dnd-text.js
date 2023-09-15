@@ -38,3 +38,18 @@ function styleSelect(){
         }
     }
 }
+//test functions for keybinding a change to css
+function test_css(){
+    let x = $(document)[0].createElement('link');
+    x.setAttribute('rel','stylesheet');
+    x.setAttribute('href','/Personal-Projects/DND-Text/test.css');
+    $('head')[0].append(x);
+}
+$('textarea#entered-text').on('keydown', function(e) {
+    console.log(e.key);
+  });
+/*
+ctrl 17
+alt 18
+R 82
+*/

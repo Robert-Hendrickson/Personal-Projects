@@ -1,0 +1,14 @@
+body{
+    color: #a50404b3;
+    background-color: #000;
+}
+textarea{
+    background-color: #000;
+    border-color: #a50404b3;
+    color: #a50404b3;
+    background-color: #000;
+}
+select,select option{
+    color: #a50404b3;
+    background-color: #000;
+}
