@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <?php
 $passed_info = false;
-if($_GET['el']){
+$type;
+if($_GET){
     $type = $_GET['el'];
     $passed_info = true;
 }
@@ -9,9 +10,9 @@ if($_GET['el']){
 <html>
     <body>
         <?php if(!$passed_info){?>
-            "test text";
+            <div>test text</div>
         <?php }elseif($passed_info){?>
-            "thanks for the info"
+            <div><?=$type?></div>
             <?php }; ?>
     </body>
 </html>
