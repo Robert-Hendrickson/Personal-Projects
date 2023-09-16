@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <header>
+        <style>
+            div{
+                width: 200px;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+            }
+        </style>
+        <script>
+            function setCookie(){
+                //document.cookie = "test = 1;session";
+                let x = new Date();
+                x.setDate(x.getDate() + 21);
+                function get_day(day){
+                    switch(day){
+                        case 0: return 'Sun';
+                        case 1: return 'Mon';
+                        case 2: return 'Tue';
+                        case 3: return 'Wed';
+                        case 4: return 'Thu';
+                        case 5: return 'Fri';
+                        case 6: return 'Sat';
+                    }
+                }
+                function get_dd(dd){
+                    if(dd.length != 2){
+                        return `0${dd}`;
+                    }else{
+                        return dd;
+                    };
+                }
+                function get_month(month){
+                    switch(month){
+                        case 0: return 'Jan';
+                        case 1: return 'Feb';
+                        case 2: return 'Mar';
+                        case 3: return 'Apr';
+                        case 4: return 'May';
+                        case 5: return 'Jun';
+                        case 6: return 'Jul';
+                        case 7: return 'Aug';
+                        case 8: return 'Sep';
+                        case 9: return 'Oct';
+                        case 10: return 'Nov';
+                        case 11: return 'Dec';
+                    } 
+                }
+                let cookieDate = `;expires=${get_day(x.getDay())}, ${get_dd(x.getDate())}, ${get_month(x.getMonth())} ${x.getFullYear()} 01:00:00 GMT`;
+               console.log('age verification passed');
+               document.cookie = `ageverification=checked;${cookieDate}`;
+            }
+            //checks for verification cookie
+            function get_cookie(name){
+                return document.cookie.split(';').some(c => {
+                    return c.trim().startsWith(name + '=');
+                });
+            }
+            /* un-needed
+            function delete_cookie( name, path, domain ) {
+                if( get_cookie( name ) ) {
+                    document.cookie = name + "=" +
+                    ((path) ? ";path="+path:"")+
+                    ((domain)?";domain="+domain:"") +
+                    ";expires=Thu, 01 Jan 1970 00:00:01 GMT";
+                }
+            }
+            */
+        </script>
+    </header>
+    <body>
+        <div id="agetest" style="display: none;">
+            <input type="button" value="cookie" onclick="setCookie()" />
+            <input type="button" value="clear" onclick="delete_cookie('test')" />
+        </div>
+        <script>
+            if(!get_cookie('ageverification')){
+                    document.getElementById('agetest').removeAttribute('style');
+                }
+        </script>
+    </body>
+</html>
