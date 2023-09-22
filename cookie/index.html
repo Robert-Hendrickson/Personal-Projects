@@ -58,22 +58,19 @@
                     return c.trim().startsWith(name + '=');
                 });
             }
-            /* un-needed
-            function delete_cookie( name, path, domain ) {
+            //deletes the cookie set by this funtion set
+            function delete_cookie( name ) {
                 if( get_cookie( name ) ) {
                     document.cookie = name + "=" +
-                    ((path) ? ";path="+path:"")+
-                    ((domain)?";domain="+domain:"") +
                     ";expires=Thu, 01 Jan 1970 00:00:01 GMT";
                 }
             }
-            */
         </script>
     </header>
     <body>
         <div id="agetest" style="display: none;">
             <input type="button" value="cookie" onclick="setCookie()" />
-            <input type="button" value="clear" onclick="delete_cookie('test')" />
+            <input type="button" value="clear" onclick="delete_cookie('ageverification')" />
         </div>
         <script>
             if(!get_cookie('ageverification')){
